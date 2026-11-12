@@ -16,16 +16,30 @@ SOBEL_Y_KERNEL = Matrix([
     [+1, +2, +1]
 ])
 
+def _matrix_sobel(matrix: Matrix) -> Matrix:
+    # Find horizontal edges
+    g_x = SOBEL_X_KERNEL * matrix
+
+    # Find vertical edges
+    g_y = SOBEL_Y_KERNEL * matrix
+
+    # Find all edges (via Pythagoras)
+    g = (g_x ** 2 + g_y ** 2).sqrt()
+
+    # Normalise g:
+    normalised_g = g.normalise(255)
+
+    return normalised_g
+
 def sobel(image: Image) -> Image:
     # Convert to greyscale:
     image = image.convert("L")
 
+    # Convert it to a matrix
     image_as_matrix = Matrix(image)
 
-    g_x = SOBEL_X_KERNEL * image_as_matrix
-    g_y = SOBEL_Y_KERNEL * image_as_matrix
-
-    g = (g_x ** 2 + g_y ** 2).sqrt()
+    # Run the sobel filter over the matrix
+    sobel_image_as_matrix = _matrix_sobel(image_as_matrix)
 
     # Convert it back to an Image
     sobel_image = sobel_image_as_matrix.to_image()
