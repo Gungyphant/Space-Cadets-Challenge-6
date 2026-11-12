@@ -59,6 +59,47 @@ def sobel(image: Image) -> Image:
     return sobel_image
 
 
+def _matrix_hough_parameter_space(matrix: Matrix, radius: int) -> Matrix:
+    result = Matrix(matrix.width, matrix.height)
+
+    for y, line in enumerate(matrix.values):
+        for x, val in enumerate(line):
+            if val:
+                for (circle_x, circle_y) in get_points_on_circle(x, y, radius):
+                    if (
+                        0 <= circle_y < result.height
+                        and
+                        0 <= circle_x < result.width
+                    ):
+                        result[circle_y][circle_x] += val
+
+    return result
+
+
+def hough_parameter_space(image: Image, radius: int) -> Image:
+    """Find the Hough parameter space of image, for a given radius
+
+    :param image: The image to find the Hough parameter space of. Must be an
+                  edge-detected image, like those output by sobel()
+    :param radius: The radius of circle to search for
+    :return: An image where the brighter a pixel, the more likely it is to be
+             the centre of a circle
+    """
+    # Convert it to a matrix
+    image_as_matrix = Matrix(image)
+
+    # Run the Hough transform over the matrix
+    hough_image_as_matrix = _matrix_hough_parameter_space(image_as_matrix, radius)
+
+    # Normalise the matrix
+    hough_image_as_matrix = hough_image_as_matrix.normalise(255)
+
+    # Convert it back to an Image
+    hough_image = hough_image_as_matrix.to_image()
+
+    return hough_image
+
+
 if __name__ == "__main__":
     with ImageModule.open("Test images/White circle with black border.webp") as im:
         # Convert the image to 100x100:
@@ -71,3 +112,6 @@ if __name__ == "__main__":
 
         sobel_im = sobel(im)
         sobel_im.show()
+
+        hough_im = hough_parameter_space(sobel(im), 41)
+        hough_im.show()
