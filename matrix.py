@@ -178,6 +178,18 @@ class Matrix:
             "L"
         )
 
+    def max_and_indices(self) -> tuple[int, int, int]:
+        max_found = -1
+        max_found_x = -1
+        max_found_y = -1
+        for y, line in enumerate(self.values):
+            for x, val in enumerate(line):
+                if val > max_found:
+                    max_found = val
+                    max_found_x = x
+                    max_found_y = y
+        return max_found, max_found_x, max_found_y
+
 
 if __name__ == "__main__":
     # Example from https://en.wikipedia.org/wiki/Kernel_(image_processing)#/media/File:2D_Convolution_Animation.gif
