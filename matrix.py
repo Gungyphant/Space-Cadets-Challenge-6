@@ -145,6 +145,32 @@ class Matrix:
     def sqrt(self) -> Matrix:
         return Matrix([[int(math.sqrt(n)) for n in line] for line in self])
 
+    def max(self) -> int:
+        return max(*[max(*line) for line in self])
+
+    def min(self) -> int:
+        return min(*[min(*line) for line in self])
+
+    def normalise(self, max_valid: int = 1, min_valid:int = 0) -> Matrix:
+        if max_valid == 1 and min_valid == 0:
+            max_val = self.max()
+            min_val = self.min()
+            return Matrix([
+                [(n - min_val)/(max_val - min_val) for n in line]
+                for line in self
+            ])
+        else:
+            if min_valid == 0:
+                return Matrix([
+                    [int(n * max_valid) for n in line]
+                    for line in self.normalise()
+                ])
+            else:
+                return Matrix([
+                    [n + min_valid for n in line]
+                    for line in self.normalise(max_valid)
+                ])
+
 
 if __name__ == "__main__":
     # Example from https://en.wikipedia.org/wiki/Kernel_(image_processing)#/media/File:2D_Convolution_Animation.gif
