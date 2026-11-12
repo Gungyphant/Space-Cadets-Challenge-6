@@ -45,7 +45,7 @@ def sobel(image: Image) -> Image:
     # Convert it to a matrix
     image_as_matrix = Matrix(image)
 
-    # Run the sobel filter over the matrix
+    # Run the Sobel filter over the matrix
     sobel_image_as_matrix = _matrix_sobel(image_as_matrix)
 
     # Normalise the matrix to valid pixel values
