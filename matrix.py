@@ -130,6 +130,17 @@ class Matrix:
     def __repr__(self):
         return repr(self.values)
 
+    def __pow__(self, power, modulo=None):
+        return Matrix([[n ** 2 for n in line] for line in self])
+
+    def __add__(self, other: Matrix):
+        if not (self.width == other.width and self.height == other.height):
+            raise ValueError(f"Incompatible dimensions for addition")
+        return Matrix([
+            [n + other[y][x] for x, n in enumerate(line)]
+            for y, line in enumerate(self.values)]
+        )
+
 
 if __name__ == "__main__":
     # Example from https://en.wikipedia.org/wiki/Kernel_(image_processing)#/media/File:2D_Convolution_Animation.gif
