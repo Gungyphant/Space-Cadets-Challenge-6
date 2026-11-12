@@ -144,6 +144,25 @@ def hough(image: Image, *, debug: bool = False) -> tuple[int, int, int]:
     return x, y, radius
 
 
+def find_circle(image: Image, *, debug: bool = False) -> tuple[int, int, int]:
+    """Find the most likely centre and radius of a circle in an image
+
+    :param image: The image to find the circle in
+    :param debug: Determines if debug messages should be printed. Default False
+    :return: The x and y of the centre of the circle, and its radius
+    """
+    # Convert the image to a matrix
+    image_as_matrix = Matrix(image)
+
+    # Find edges
+    edge_found_image = _matrix_sobel(image_as_matrix)
+
+    # Find the centre and radius
+    centre_x, centre_y, radius = _matrix_hough(edge_found_image, debug=debug)
+
+    return centre_x, centre_y, radius
+
+
 if __name__ == "__main__":
     with ImageModule.open("Test images/White circle with black border.webp") as im:
         # Convert the image to 100x100:
