@@ -27,14 +27,8 @@ def sobel(image: Image) -> Image:
 
     g = (g_x ** 2 + g_y ** 2).sqrt()
 
-    # Normalise g:
-    normalised_g = g.normalise(255)
-
-    # Convert it to an Image (via a numpy array)
-    sobel_image = ImageModule.fromarray(
-        np.asarray(normalised_g.values, dtype=np.uint8),
-        "L"
-    )
+    # Convert it back to an Image
+    sobel_image = sobel_image_as_matrix.to_image()
 
     return sobel_image
 

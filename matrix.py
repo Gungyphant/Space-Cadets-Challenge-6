@@ -2,6 +2,7 @@ import math
 from functools import cache
 from typing import overload
 
+import numpy as np
 from PIL import Image as ImageModule
 from PIL.Image import Image
 
@@ -170,6 +171,12 @@ class Matrix:
                     [n + min_valid for n in line]
                     for line in self.normalise(max_valid)
                 ])
+
+    def to_image(self) -> Image:
+        return ImageModule.fromarray(
+            np.asarray(self.values, dtype=np.uint8),
+            "L"
+        )
 
 
 if __name__ == "__main__":
