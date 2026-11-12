@@ -130,10 +130,10 @@ class Matrix:
     def __repr__(self):
         return repr(self.values)
 
-    def __pow__(self, power, modulo=None):
+    def __pow__(self, power, modulo=None) -> Matrix:
         return Matrix([[n ** 2 for n in line] for line in self])
 
-    def __add__(self, other: Matrix):
+    def __add__(self, other: Matrix) -> Matrix:
         if not (self.width == other.width and self.height == other.height):
             raise ValueError(f"Incompatible dimensions for addition")
         return Matrix([
