@@ -104,6 +104,9 @@ def _matrix_hough(matrix: Matrix, *, debug: bool = False) -> tuple[int, int, int
     best = -1
     result = -1, -1, -1
 
+    # For every possible radius, find the most likely centre and how likely it
+    #  is. Find the radius that maximises that likelihood and output it along
+    #  with the coordinates of the most likely centre for that radius
     for radius in range(1, min(matrix.width, matrix.height) // 2):
         if debug:
             print(f"Radius {radius} ", end="")
