@@ -36,10 +36,7 @@ def _matrix_sobel(matrix: Matrix) -> Matrix:
     # Find all edges (via Pythagoras)
     g = (g_x ** 2 + g_y ** 2).sqrt()
 
-    # Normalise g:
-    normalised_g = g.normalise(255)
-
-    return normalised_g
+    return g
 
 def sobel(image: Image) -> Image:
     # Convert to greyscale:
@@ -50,6 +47,9 @@ def sobel(image: Image) -> Image:
 
     # Run the sobel filter over the matrix
     sobel_image_as_matrix = _matrix_sobel(image_as_matrix)
+
+    # Normalise the matrix to valid pixel values
+    sobel_image_as_matrix = sobel_image_as_matrix.normalise(255)
 
     # Convert it back to an Image
     sobel_image = sobel_image_as_matrix.to_image()
