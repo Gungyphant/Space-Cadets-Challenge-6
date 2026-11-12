@@ -39,7 +39,11 @@ def _matrix_sobel(matrix: Matrix) -> Matrix:
     return g
 
 def sobel(image: Image) -> Image:
+    """Use the Sobel filter to find edges in image
 
+    :param image: The image to find edges in. Must be monochrome
+    :return: The image with edges detected
+    """
     # Convert it to a matrix
     image_as_matrix = Matrix(image)
 
