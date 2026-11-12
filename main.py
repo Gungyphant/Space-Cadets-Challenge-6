@@ -39,8 +39,6 @@ def _matrix_sobel(matrix: Matrix) -> Matrix:
     return g
 
 def sobel(image: Image) -> Image:
-    # Convert to greyscale:
-    image = image.convert("L")
 
     # Convert it to a matrix
     image_as_matrix = Matrix(image)
@@ -58,10 +56,14 @@ def sobel(image: Image) -> Image:
 
 
 if __name__ == "__main__":
-    with ImageModule.open("Test images/Utah teapot.jpg") as im:
+    with ImageModule.open("Test images/White circle with black border.webp") as im:
         # Convert the image to 100x100:
-        # im = im.resize((100, 100))
+        im = im.resize((100, 100))
+
+        # Convert to greyscale:
+        im = im.convert("L")
 
         im.show()
+
         sobel_im = sobel(im)
         sobel_im.show()
