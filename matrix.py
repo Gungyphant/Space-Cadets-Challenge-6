@@ -111,7 +111,7 @@ class Matrix:
                         corresponding_source_y = source_y + (kernel_y - kernel_center_y)
 
                         # Use the extend edge-handling method:
-                        corresponding_source_y = clamp(0, corresponding_source_y, source.width - 1)
+                        corresponding_source_y = clamp(0, corresponding_source_y, source.height - 1)
 
                         corresponding_source_value = source[corresponding_source_y][corresponding_source_x]
                         kernel_value = kernel[kernel_y][kernel_x]
