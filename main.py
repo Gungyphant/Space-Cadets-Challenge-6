@@ -100,33 +100,43 @@ def hough_parameter_space(image: Image, radius: int) -> Image:
     return hough_image
 
 
-def _matrix_hough(matrix: Matrix) -> tuple[int, int, int]:
+def _matrix_hough(matrix: Matrix, *, debug: bool = False) -> tuple[int, int, int]:
     best = -1
     result = -1, -1, -1
 
     for radius in range(1, min(matrix.width, matrix.height) // 2):
+        if debug:
+            print(f"Radius {radius} ", end="")
         brightness, best_x, best_y = _matrix_hough_parameter_space(
             matrix,
             radius
         ).max_and_indices()
+        if debug:
+            print(f"centre at ({best_x}, {best_y}), score {brightness}", end="")
         if brightness > best:
             best = brightness
             result = best_x, best_y, radius
+            if debug:
+                print(" new best")
+        elif debug:
+            print()
 
     return result
 
 
-def hough(image: Image) -> tuple[int, int, int]:
+def hough(image: Image, *, debug: bool = False) -> tuple[int, int, int]:
     """Finds the most likely circle in an image
 
-    :param image: The image to find the circle in
+    :param image: The image to find the circle in. Must be an
+                  edge-detected image, like those output by sobel()
+    :param debug: Determines if debug messages should be printed. Default False
     :return: The x and y of the centre of the circle, and its radius
     """
     # Convert it to a matrix
     image_as_matrix = Matrix(image)
 
     # Run the Hough Transform over the matrix
-    x, y, radius = _matrix_hough(image_as_matrix)
+    x, y, radius = _matrix_hough(image_as_matrix, debug=debug)
 
     return x, y, radius
 
@@ -147,4 +157,4 @@ if __name__ == "__main__":
         hough_im = hough_parameter_space(sobel(im), 41)
         hough_im.show()
 
-        print(hough(sobel(im)))
+        print(hough(sobel(im), debug=True))
