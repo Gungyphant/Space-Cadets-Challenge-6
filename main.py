@@ -1,8 +1,10 @@
+import os
 from math import cos, sin, radians
 from typing import Generator
 
 from PIL import Image as ImageModule
 from PIL.Image import Image
+from PIL import ImageDraw
 
 from matrix import Matrix
 
@@ -151,6 +153,9 @@ def find_circle(image: Image, *, debug: bool = False) -> tuple[int, int, int]:
     :param debug: Determines if debug messages should be printed. Default False
     :return: The x and y of the centre of the circle, and its radius
     """
+    # Convert the image to greyscale
+    image = image.convert("L")
+
     # Convert the image to a matrix
     image_as_matrix = Matrix(image)
 
@@ -163,20 +168,41 @@ def find_circle(image: Image, *, debug: bool = False) -> tuple[int, int, int]:
     return centre_x, centre_y, radius
 
 
+def circle_circle(image: Image, *, debug: bool = False) -> Image:
+    """Finds the most likely circle in an image and circles it
+
+    :param image: The image to look for circles in
+    :param debug: Determines if debug messages should be printed. Default False
+    :return: The image with the most likely circle circled
+    """
+    centre_x, centre_y, radius = find_circle(image, debug=debug)
+
+    draw = ImageDraw.Draw(image)
+    draw.circle((centre_x, centre_y), radius, outline="red", width=1)
+
+    return image
+
+
 if __name__ == "__main__":
-    with ImageModule.open("Test images/White circle with black border.webp") as im:
-        # Convert the image to 100x100:
-        im = im.resize((100, 100))
-
-        # Convert to greyscale:
-        im = im.convert("L")
-
-        im.show()
-
-        sobel_im = sobel(im)
-        sobel_im.show()
-
-        hough_im = hough_parameter_space(sobel(im), 41)
-        hough_im.show()
-
-        print(hough(sobel(im), debug=True))
+    for name in os.listdir("Test images"):
+        with ImageModule.open(f"Test images/{name}") as im:
+            im = im.resize((100, 100))
+            im.show()
+            circle_circle(im, debug=True).show()
+        input("Press enter to continue")
+    # with ImageModule.open("Test images/1 White circle with black border.webp") as im:
+    #     # Convert the image to 100x100:
+    #     im = im.resize((100, 100))
+    #
+    #     # Convert to greyscale:
+    #     im = im.convert("L")
+    #
+    #     im.show()
+    #
+    #     sobel_im = sobel(im)
+    #     sobel_im.show()
+    #
+    #     hough_im = hough_parameter_space(sobel(im), 41)
+    #     hough_im.show()
+    #
+    #     print(hough(sobel(im), debug=True))
