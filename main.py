@@ -100,6 +100,37 @@ def hough_parameter_space(image: Image, radius: int) -> Image:
     return hough_image
 
 
+def _matrix_hough(matrix: Matrix) -> tuple[int, int, int]:
+    best = -1
+    result = -1, -1, -1
+
+    for radius in range(1, min(matrix.width, matrix.height) // 2):
+        brightness, best_x, best_y = _matrix_hough_parameter_space(
+            matrix,
+            radius
+        ).max_and_indices()
+        if brightness > best:
+            best = brightness
+            result = best_x, best_y, radius
+
+    return result
+
+
+def hough(image: Image) -> tuple[int, int, int]:
+    """Finds the most likely circle in an image
+
+    :param image: The image to find the circle in
+    :return: The x and y of the centre of the circle, and its radius
+    """
+    # Convert it to a matrix
+    image_as_matrix = Matrix(image)
+
+    # Run the Hough Transform over the matrix
+    x, y, radius = _matrix_hough(image_as_matrix)
+
+    return x, y, radius
+
+
 if __name__ == "__main__":
     with ImageModule.open("Test images/White circle with black border.webp") as im:
         # Convert the image to 100x100:
@@ -115,3 +146,5 @@ if __name__ == "__main__":
 
         hough_im = hough_parameter_space(sobel(im), 41)
         hough_im.show()
+
+        print(hough(sobel(im)))
