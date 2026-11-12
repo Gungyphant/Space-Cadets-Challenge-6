@@ -1,8 +1,18 @@
-import numpy as np
+from math import cos, sin, radians
+from typing import Generator
+
 from PIL import Image as ImageModule
 from PIL.Image import Image
 
 from matrix import Matrix
+
+
+def get_points_on_circle(centre_x: int, centre_y: int, radius: int) -> Generator[tuple[int, int]]:
+    for theta in range(360):  # TODO: determine the theta difference
+        x = centre_x + radius * cos(radians(theta))
+        y = centre_y + radius * sin(radians(theta))
+        yield int(x), int(y)
+
 
 SOBEL_X_KERNEL = Matrix([
     [-1,  0, +1],
