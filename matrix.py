@@ -1,3 +1,4 @@
+import math
 from functools import cache
 from typing import overload
 
@@ -140,6 +141,9 @@ class Matrix:
             [n + other[y][x] for x, n in enumerate(line)]
             for y, line in enumerate(self.values)]
         )
+
+    def sqrt(self) -> Matrix:
+        return Matrix([[int(math.sqrt(n)) for n in line] for line in self])
 
 
 if __name__ == "__main__":
